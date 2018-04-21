@@ -520,6 +520,7 @@ if __name__ == "__main__":
 	
 	x = api_results['Location']['Lat']
 	firebase.post('/xcol', data = x, headers = {'name' : x} )
+	print "WORKING"
 	
         if args.verbose:
             print "[+] Result"
