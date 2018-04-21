@@ -532,7 +532,7 @@ if __name__ == "__main__":
         if args.verbose:
             print "[+] Google Maps link"
             print 'https://www.google.com/maps?q=%f,%f' % (api_result['location']['lat'], api_result['location']['lng'])
-		print "hello"
+	
 
         # --with-overview argument set to False by default via get_arguments()
         if args.with_overview: 
