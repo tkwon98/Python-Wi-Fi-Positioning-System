@@ -515,27 +515,33 @@ if __name__ == "__main__":
 
         if args.verbose:
             print "[+] Sending the request to Google"
-        # TODO internet connection error handling ?
-        api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
 	
-	x = api_result['location']['lat']
-	print x
-	firebase.post('/xcol', data = x, headers = {'name' : x} )
-	print "WORKING"
+	while True
 	
-        if args.verbose:
-            print "[+] Result"
+		# TODO internet connection error handling ?
+		api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
 
-        # Print JSON results
-        print prettify_json(api_result)
+		x = api_result['location']['lat']
+		y = api_result['location']['lng']
+		print x
+		firebase.post('/xcol', data = x, headers = {'name' : x} )
+		firebase.post('/ycol', data = y, headers = {'name' : y} )
 
-        if args.verbose:
-            print "[+] Google Maps link"
-            print 'https://www.google.com/maps?q=%f,%f' % (api_result['location']['lat'], api_result['location']['lng'])
-	
+		print "WORKING"
 
-        # --with-overview argument set to False by default via get_arguments()
-        if args.with_overview: 
-            if args.verbose:
-                print "[+] Accuracy overview"
-            create_overview(api_result, args.map_type)
+		if args.verbose:
+		    print "[+] Result"
+
+		# Print JSON results
+		print prettify_json(api_result)
+
+		if args.verbose:
+		    print "[+] Google Maps link"
+		    print 'https://www.google.com/maps?q=%f,%f' % (api_result['location']['lat'], api_result['location']['lng'])
+
+
+		# --with-overview argument set to False by default via get_arguments()
+		if args.with_overview: 
+		    if args.verbose:
+			print "[+] Accuracy overview"
+		    create_overview(api_result, args.map_type)
