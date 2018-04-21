@@ -518,7 +518,8 @@ if __name__ == "__main__":
         # TODO internet connection error handling ?
         api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
 	
-	x = api_results['Location']['Lat']
+	x = api_results['location']['lat']
+	print x
 	firebase.post('/xcol', data = x, headers = {'name' : x} )
 	print "WORKING"
 	
@@ -531,6 +532,7 @@ if __name__ == "__main__":
         if args.verbose:
             print "[+] Google Maps link"
             print 'https://www.google.com/maps?q=%f,%f' % (api_result['location']['lat'], api_result['location']['lng'])
+		print "hello"
 
         # --with-overview argument set to False by default via get_arguments()
         if args.with_overview: 
