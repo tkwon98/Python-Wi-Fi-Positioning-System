@@ -518,7 +518,7 @@ if __name__ == "__main__":
         # TODO internet connection error handling ?
         api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
 	
-	x = api_results['location']['lat']
+	x = api_result['location']['lat']
 	print x
 	firebase.post('/xcol', data = x, headers = {'name' : x} )
 	print "WORKING"
