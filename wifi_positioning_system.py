@@ -517,7 +517,8 @@ if __name__ == "__main__":
             print "[+] Sending the request to Google"
 	
 	while True:
-	
+		
+		time.sleep(30)
 		# TODO internet connection error handling ?
 		api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
 
