@@ -78,117 +78,6 @@ def prettify_json(json_data):
     else:
         return simplejson.dumps(json_data)
 
-
-def create_overview(api_result, map_type, filename='Wifi_geolocation.html', filepath=get_scriptpath()):
-    """ROADMAP   displays the default road map view
-       SATELLITE displays Google Earth satellite images
-       HYBRID    displays a mixture of normal and satellite views
-                (this is the default map type)
-       TERRAIN   displays a physical map based on terrain information"""
-
-    html = """<!DOCTYPE html>
-    <html>
-        <head>
-            <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-            <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-
-            <style type="text/css">
-                html, body {
-                    height: 100%;
-                    margin: 0;
-                    padding: 0;
-                }
-
-                #map_canvas {
-                    height: 100%;
-                }
-
-                @media print {
-                    html, body {
-                        height: auto;
-                    }
-
-                    #map_canvas {
-                        height: 650px;
-                    }
-                }
-            </style>
-
-            <title>Geolocation</title>
-            <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-            <script type="text/javascript">
-                function initialize() {
-                    var mapOptions = {
-                        zoom: 18,
-                        center: new
-                        google.maps.LatLng("""+str(api_result['location']['lat'])+", "+str(api_result['location']['lng'])+"""),
-                        mapTypeId: google.maps.MapTypeId."""+map_type+"""
-
-                    };
-
-                    var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
-                    // Construct the accuracy circle.
-                    var accuracyOptions = {
-                        strokeColor: "#000000",
-                        strokeOpacity: 0.8,
-                        strokeWeight: 2,
-                        fillColor: "#000000",
-                        fillOpacity: 0.35,
-                        map: map,
-                        center: mapOptions.center,
-                        radius: """+str(api_result["accuracy"])+"""
-                    };
-                    var accuracyCircle = new google.maps.Circle(accuracyOptions);
-
-                    var contentString = '<div>'+
-                        '<p><b>Wi-Fi geolocation</b><br>'+
-                        'Latitude : """+str(api_result['location']['lat'])+"""<br>'+
-                        'Longitude : """+str(api_result['location']['lng'])+"""<br>'+
-                        'Accuracy : """+str(api_result['accuracy'])+"""</p>'+
-                        '</div>';
-
-                    var infoWindow = new google.maps.InfoWindow({
-                        content: contentString
-                    });
-
-                    var marker = new google.maps.Marker({
-                        position: mapOptions.center,
-                        map: map
-                    });
-
-                    google.maps.event.addListener(accuracyCircle, 'click', function() {
-                        infoWindow.open(map,marker);
-                    });
-
-                    google.maps.event.addListener(marker, 'click', function() {
-                        infoWindow.open(map,marker);
-                    });
-                }
-            </script>
-        </head>
-        <body onload="initialize()">
-            <div id="map_canvas"></div>
-        </body>
-    </html>"""
-
-    # TODO parameters for output file path / name modification
-    with open(filepath+filename, 'wb') as overview:
-        overview.write(html)
-
-    if args.verbose:
-        print filepath + filename
-
-    # Keep the owners
-    scriptpath = get_scriptpath()
-    script_uid = os.stat(scriptpath+sys.argv[0]).st_uid
-    script_gid = os.stat(scriptpath+sys.argv[0]).st_gid
-    overview_uid = os.stat(filepath+filename).st_uid
-    overview_gid = os.stat(filepath+filename).st_gid
-    if overview_uid != script_uid or overview_gid != script_gid:
-        os.chown(filepath+filename, script_uid, script_gid)
-
-
 def get_signal_strengths(wifi_scan_method):
     wifi_data = []
 
@@ -523,9 +412,6 @@ if __name__ == "__main__":
         json_data = simplejson.JSONEncoder().encode(location_request)
         http_request = urllib2.Request('https://www.googleapis.com/geolocation/v1/geolocate?key=' + API_KEY)
         http_request.add_header('Content-Type', 'application/json')
-
-        if args.verbose:
-            print "[+] Sending the request to Google"
 	
 	buttonStatus = 0
 	
@@ -541,18 +427,6 @@ if __name__ == "__main__":
 	firebase.post('/ycol', data = y )
 	firebase.post('/button_status', data = buttonStatus)
 
-	# Print JSON results
-	print prettify_json(api_result)
 
-	if args.verbose:
-	    print "[+] Google Maps link"
-	    print 'https://www.google.com/maps?q=%f,%f' % (api_result['location']['lat'], api_result['location']['lng'])
-
-
-	# --with-overview argument set to False by default via get_arguments()
-	if args.with_overview: 
-	    if args.verbose:
-		print "[+] Accuracy overview"
-	    create_overview(api_result, args.map_type)
 
 	
