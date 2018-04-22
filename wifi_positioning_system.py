@@ -22,6 +22,8 @@ import sys
 import os
 import re
 import time
+import requests
+import RPi.GPIO as GPIO
 from firebase import firebase
 
 try:
@@ -51,6 +53,11 @@ API_KEY = os.environ.get('GOOGLE_API_KEY') or 'YOUR_KEY'
 # TODO check if there is another API from Open Street Map ?
 
 firebase = firebase.FirebaseApplication('https://friendlychat-d891b.firebaseio.com/', None)
+
+gpio_pin = 18
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(gpio_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def get_scriptpath():
     pathname = os.path.dirname(sys.argv[0])
@@ -517,6 +524,11 @@ if __name__ == "__main__":
         if args.verbose:
             print "[+] Sending the request to Google"
 	
+	buttonStatus = 0
+	
+	for i in range(60):
+		if GPIO.input(gpio_pin) == true:
+			buttonStatus = 1
 	
 	# TODO internet connection error handling ?
 	api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
@@ -526,6 +538,7 @@ if __name__ == "__main__":
 	print x
 	firebase.post('/xcol', data = x )
 	firebase.post('/ycol', data = y )
+	firebase.post('/button_status', data = buttonStatus)
 
 	print "WORKING"
 
