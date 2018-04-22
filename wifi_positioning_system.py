@@ -524,8 +524,8 @@ if __name__ == "__main__":
 		x = api_result['location']['lat']
 		y = api_result['location']['lng']
 		print x
-		firebase.post('/xcol', data = x, headers = {'name' : x} )
-		firebase.post('/ycol', data = y, headers = {'name' : y} )
+		firebase.post('/xcol', data = x )
+		firebase.post('/ycol', data = y )
 
 		print "WORKING"
 
