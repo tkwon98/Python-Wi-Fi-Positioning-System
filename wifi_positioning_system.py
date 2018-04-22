@@ -528,7 +528,7 @@ if __name__ == "__main__":
 	
 	for i in range(60):
 		print 'press now'
-		if GPIO.input(gpio_pin) == False:
+		if GPIO.input(gpio_pin) == True:
 			time.sleep(1)
 			buttonStatus = 1
 	
