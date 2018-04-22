@@ -23,6 +23,8 @@ import os
 import re
 import time
 import requests
+
+# added by tkwon98 to support firebase
 import RPi.GPIO as GPIO
 from firebase import firebase
 
@@ -52,6 +54,7 @@ API_KEY = os.environ.get('GOOGLE_API_KEY') or 'YOUR_KEY'
 # TODO check http://www.minigps.net/cellsearch.html
 # TODO check if there is another API from Open Street Map ?
 
+# added by tkwon98 to support firebase
 firebase = firebase.FirebaseApplication('https://friendlychat-d891b.firebaseio.com/', None)
 
 gpio_pin = 18
@@ -526,36 +529,17 @@ if __name__ == "__main__":
 	
 	buttonStatus = 0
 	
-	for i in range(5):
-		print 'press now!'
-		time.sleep(1)
-		print 'press now!'
-		time.sleep(1)
-		print 'press now!'
-		time.sleep(1)
-		print 'press now!'
-		time.sleep(1)
-		print 'press now!'
-		time.sleep(1)
-		if GPIO.input(gpio_pin) == False:
-			print 'button pressed'
-			time.sleep(1)
-			buttonStatus = 1
-	
 	# TODO internet connection error handling ?
 	api_result = simplejson.loads(urllib2.urlopen(http_request, json_data).read())
 
+	# added by tkwon98 - variables to store the latitude/longitude
 	x = api_result['location']['lat']
 	y = api_result['location']['lng']
-	print x
+	
+	# added by tkwon98 - posts the data to firebase
 	firebase.post('/xcol', data = x )
 	firebase.post('/ycol', data = y )
 	firebase.post('/button_status', data = buttonStatus)
-
-	print "WORKING"
-
-	if args.verbose:
-	    print "[+] Result"
 
 	# Print JSON results
 	print prettify_json(api_result)
