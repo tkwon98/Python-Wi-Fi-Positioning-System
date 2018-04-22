@@ -527,7 +527,7 @@ if __name__ == "__main__":
 	buttonStatus = 0
 	
 	for i in range(60):
-		if GPIO.input(gpio_pin) == true:
+		if GPIO.input(gpio_pin) == True:
 			buttonStatus = 1
 	
 	# TODO internet connection error handling ?
