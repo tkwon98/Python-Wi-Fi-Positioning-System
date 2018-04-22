@@ -546,4 +546,4 @@ if __name__ == "__main__":
 		print "[+] Accuracy overview"
 	    create_overview(api_result, args.map_type)
 
-	time.sleep(60)
+	
