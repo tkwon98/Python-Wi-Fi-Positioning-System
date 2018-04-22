@@ -537,7 +537,8 @@ if __name__ == "__main__":
 		time.sleep(1)
 		print 'press now!'
 		time.sleep(1)
-		if GPIO.input(gpio_pin) == True:
+		if GPIO.input(gpio_pin) == False:
+			print 'button pressed'
 			time.sleep(1)
 			buttonStatus = 1
 	
